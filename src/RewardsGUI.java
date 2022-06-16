@@ -21,6 +21,7 @@ public class RewardsGUI {
     private JButton viewDetails;
     //wish simulation
     private GenshinData genshinData;
+    //colors
 
     public RewardsGUI(User user) {
         this.user = user;
@@ -65,7 +66,26 @@ public class RewardsGUI {
         } else if (source == wishButton) {
             String result = wishSimulation();
             inventory.add(result);
+            UIManager um = new UIManager();
+            if (findCharacter(result) == null) {
+                Weapon weapon = findWeapon(result);
+                int rarity = weapon.getRarity();
+                if (rarity == 4) {
+                    um.put("OptionPane.background", new Color(163, 64, 199));
+                } else if (rarity == 5) {
+                    um.put("OptionPane.background",new Color(255,170,74));
+                }
+            } else {
+                Character character = findCharacter(result);
+                int rarity = character.getRarity();
+                if (rarity == 4) {
+                    um.put("OptionPane.background", new Color(163, 64, 199));
+                } else if (rarity == 5) {
+                    um.put("OptionPane.background",new Color(255,170,74));
+                }
+            }
             JOptionPane.showMessageDialog(frame, result);
+            um.put("OptionPane.background", Color.white);
         } else if (source == back) {
             frame.remove(panel2);
             frame.validate();
@@ -76,19 +96,33 @@ public class RewardsGUI {
             String details = "";
             int index = listOfItems.getSelectedIndex();
             String itemName = inventory.get(index);
+            UIManager um = new UIManager();
             if (findCharacter(itemName) == null) {
                 Weapon weapon = findWeapon(itemName);
                 details += "Name: " + weapon.getName() + "\n";
                 details += "Rarity: " + weapon.getRarity() + " star\n";
                 details += "Type: " + weapon.getType();
+                int rarity = weapon.getRarity();
+                if (rarity == 4) {
+                    um.put("OptionPane.background", new Color(163, 64, 199));
+                } else if (rarity == 5) {
+                    um.put("OptionPane.background",new Color(255,170,74));
+                }
             } else {
                 Character character = findCharacter(itemName);
                 details += "Name: " + character.getName() + "\n";
                 details += "Description: " + character.getDescription() + "\n";
                 details += "Rarity: " + character.getRarity() + " star\n";
                 details += "Weapon used: " + character.getWeapon() + "\n";
+                int rarity = character.getRarity();
+                if (rarity == 4) {
+                    um.put("OptionPane.background", new Color(163, 64, 199));
+                } else if (rarity == 5) {
+                    um.put("OptionPane.background",new Color(255,170,74));
+                }
             }
             JOptionPane.showMessageDialog(frame, details);
+            um.put("OptionPane.background", Color.white);
         }
     }
     public Character findCharacter(String name) {
