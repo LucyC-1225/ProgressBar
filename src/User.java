@@ -12,6 +12,7 @@ public class User {
     private ArrayList<Integer> XP;
     private BarGUI progressBar;
     private HQGUI HQ;
+    private RewardsGUI rewards; //rewardsGUI
 
     public User(int currentXP, int maxXP, int level, int addXPValue) {
         this.currentXP = currentXP;
@@ -22,10 +23,12 @@ public class User {
         XP = new ArrayList<Integer>();
         progressBar = new BarGUI(this, true);
         HQ = new HQGUI(this);
+        rewards = new RewardsGUI(this);
     }
     public void start() {
         progressBar.start();
         HQ.start();
+        rewards.start();
     }
 
     public String getUsername() {
@@ -70,6 +73,14 @@ public class User {
 
     public int getTotalXP() {
         return totalXP;
+    }
+
+    public RewardsGUI getRewards() {
+        return rewards;
+    }
+
+    public void setRewards(RewardsGUI rewards) {
+        this.rewards = rewards;
     }
 
     public void setTotalXP(int totalXP) {
@@ -125,7 +136,9 @@ public class User {
         this.XP.add(XP);
         currentXP += XP;
         totalXP += XP;
+        rewards.setXPCurrency(rewards.getXPCurrency() + XP);
         progressBar.updateData();
+        rewards.updateData();
     }
     public String getMissionInfo() {
         String str = "";
@@ -140,15 +153,20 @@ public class User {
         int removed = XP.remove(index);
         currentXP -= removed;
         totalXP -= removed;
+        rewards.setXPCurrency(rewards.getXPCurrency() - removed);
         progressBar.updateData();
+        rewards.updateData();
     }
     public void editMission(int index, String description, int XP) {
         missions.set(index, description);
         currentXP -= this.XP.get(index); //it's possible for negative XP to exist
         totalXP -= this.XP.get(index);
+        rewards.setXPCurrency(rewards.getXPCurrency() - this.XP.get(index));
         this.XP.set(index, XP);
         currentXP += XP;
         totalXP += XP;
+        rewards.setXPCurrency(rewards.getXPCurrency() + XP);
         progressBar.updateData();
+        rewards.updateData();
     }
 }

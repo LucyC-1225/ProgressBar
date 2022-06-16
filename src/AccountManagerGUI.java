@@ -131,7 +131,9 @@ public class AccountManagerGUI {
                 String mission = missions.get(i);
                 strMission += mission + "|";
             }
-            strMission += missions.get(missions.size() - 1) + "\n";
+            if (missions.size() > 0) {
+                strMission += missions.get(missions.size() - 1) + "\n";
+            }
             fos.write(strMission.getBytes());
 
             ArrayList<Integer> XPs = user.getXP();
@@ -140,8 +142,25 @@ public class AccountManagerGUI {
                 String XP = XPs.get(i) + "";
                 strXP += XP + "|";
             }
-            strXP += XPs.get(XPs.size() - 1);
+            if (XPs.size() > 0) {
+                strXP += XPs.get(XPs.size() - 1) + "\n";
+            }
             fos.write(strXP.getBytes());
+
+            String XPCurrency = user.getRewards().getXPCurrency() + "\n";
+            fos.write(XPCurrency.getBytes());
+
+            ArrayList<String> items = user.getRewards().getInventory();
+            String strItems = "";
+            for (int i = 0; i < items.size() - 1; i++) {
+                String item = items.get(i) + "";
+                strItems += item + "|";
+            }
+            if (items.size() > 0) {
+                strItems += items.get(items.size() - 1);
+            }
+            fos.write(strItems.getBytes());
+
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
@@ -227,6 +246,26 @@ public class AccountManagerGUI {
                 index2 = strXP.indexOf("|");
             }
             XPs.add(Integer.parseInt(strXP));
+
+            int XPCurrency = Integer.parseInt(sc2.nextLine());
+
+            ArrayList<String> inventory = new ArrayList<String>();
+            if (sc2.hasNextLine()) {
+                String strInventory = sc2.nextLine();
+                int index3 = strInventory.indexOf("|");
+                while (index3 != -1) {
+                    String item = strInventory.substring(0, index3);
+                    inventory.add(item);
+                    strInventory = strInventory.substring(index3 + 1);
+                    index3 = strInventory.indexOf("|");
+                }
+                inventory.add(strInventory);
+            }
+
+            RewardsGUI rewards = new RewardsGUI(user);
+            rewards.setInventory(inventory);
+            rewards.setXPCurrency(XPCurrency);
+            user.setRewards(rewards);
 
             user.updateLevel();
             user.setXP(XPs);
