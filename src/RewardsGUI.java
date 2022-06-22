@@ -13,6 +13,7 @@ public class RewardsGUI {
     private JLabel XPCurrencyLabel;
     private JButton inventoryButton;
     private JButton wishButton;
+    private JButton simulateButton;
     //inventory Window
     private JPanel panel2;
     private DefaultListModel data;
@@ -55,6 +56,11 @@ public class RewardsGUI {
         wishButton = new JButton("Wish");
         wishButton.addActionListener(this::actionPerformed);
         panel.add(wishButton, c);
+
+        c.gridy = 3;
+        simulateButton = new JButton("Simulate");
+        simulateButton.addActionListener(this::actionPerformed);
+        panel.add(simulateButton, c);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -123,6 +129,36 @@ public class RewardsGUI {
             }
             JOptionPane.showMessageDialog(frame, details);
             um.put("OptionPane.background", Color.white);
+        } else if (source == simulateButton) {
+            int numOfWishes = Integer.parseInt(JOptionPane.showInputDialog(frame, "How many times do you want to wish?"));
+            for (int i = 0; i < numOfWishes; i++) {
+                String result = wishSimulation();
+                inventory.add(result);
+                UIManager um = new UIManager();
+                if (findCharacter(result) == null) {
+                    Weapon weapon = findWeapon(result);
+                    int rarity = weapon.getRarity();
+                    if (rarity == 4) {
+                        um.put("OptionPane.background", new Color(163, 64, 199));
+                        JOptionPane.showMessageDialog(frame, result);
+                    } else if (rarity == 5) {
+                        um.put("OptionPane.background",new Color(255,170,74));
+                        JOptionPane.showMessageDialog(frame, result);
+                    }
+                    um.put("OptionPane.background", Color.white);
+                } else {
+                    Character character = findCharacter(result);
+                    int rarity = character.getRarity();
+                    if (rarity == 4) {
+                        um.put("OptionPane.background", new Color(163, 64, 199));
+                        JOptionPane.showMessageDialog(frame, result);
+                    } else if (rarity == 5) {
+                        um.put("OptionPane.background",new Color(255,170,74));
+                        JOptionPane.showMessageDialog(frame, result);
+                    }
+                    um.put("OptionPane.background", Color.white);
+                }
+            }
         }
     }
     public Character findCharacter(String name) {
